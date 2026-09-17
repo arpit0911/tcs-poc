@@ -33,12 +33,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface NavbarProps {
-  isDark: boolean;
-  toggleTheme: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
+export const Navbar: React.FC = () => {
   const styles = useStyles();
 
   return (
@@ -50,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDark, toggleTheme }) => {
       </div>
 
       <div className={styles.rightSection}>
-        <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+        <ThemeToggle />
         <UserProfile />
       </div>
     </nav>

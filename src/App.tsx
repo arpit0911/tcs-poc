@@ -1,42 +1,32 @@
-import React, { useState } from "react";
-import {
-  FluentProvider,
-  webLightTheme,
-  webDarkTheme,
-  makeStyles,
-} from "@fluentui/react-components";
-import { Navbar } from "./components/Navbar";
+import React from 'react';
+import { FluentProvider, webLightTheme, webDarkTheme, makeStyles } from '@fluentui/react-components';
+import { Navbar } from './components/Navbar';
+import { useAppSelector } from './store/hooks';
+
 
 const useStyles = makeStyles({
   appContainer: {
-    padding: 0,
-    fontFamily: "Segoe UI, sans-serif",
+    minHeight: '100vh',
+    fontFamily: 'Segoe UI, sans-serif',
   },
   mainContent: {
-    padding: "24px",
+    padding: '24px',
   },
 });
 
 const App: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
+  // Consume the theme from Redux
+  const isDark = useAppSelector((state) => state.theme.isDark);
   const styles = useStyles();
-
-  const toggleTheme = () => setIsDark(!isDark);
 
   return (
     <FluentProvider theme={isDark ? webDarkTheme : webLightTheme}>
-      <div
-        className={styles.appContainer}
-        style={{ backgroundColor: isDark ? "#242424" : "#faf9f8" }}
-      >
-        <Navbar isDark={isDark} toggleTheme={toggleTheme} />
-
+      <div className={styles.appContainer} style={{ backgroundColor: isDark ? '#242424' : '#faf9f8' }}>
+        <Navbar />
+        
         <main className={styles.mainContent}>
-          <h1>Welcome to Fluent UI v9</h1>
-          <p>
-            This layout is fully responsive. Resize the window to see the mobile
-            menu in action!
-          </p>
+          <h1>Redux Toolkit Integrated</h1>
+          <p>The theme toggle and user profile are now powered by Redux global state!</p>
         </main>
       </div>
     </FluentProvider>
