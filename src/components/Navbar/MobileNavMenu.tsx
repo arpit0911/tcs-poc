@@ -6,22 +6,13 @@ import {
   MenuItem,
   MenuPopover,
   Button,
-  makeStyles,
 } from "@fluentui/react-components";
 // import { Menu as MenuIcon } from "lucide-react";
 import { NavigationFilled } from "@fluentui/react-icons";
-
-const useStyles = makeStyles({
-  container: {
-    display: "none",
-    "@media (max-width: 768px)": {
-      display: "block",
-    },
-  },
-});
+import { useMobileNavStyles } from "./MobileNavMenu.styles";
 
 export const MobileNavMenu: React.FC = () => {
-  const styles = useStyles();
+  const styles = useMobileNavStyles();
 
   return (
     <div className={styles.container}>
