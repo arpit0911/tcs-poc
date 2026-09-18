@@ -34,10 +34,8 @@ export const ShippingForm: React.FC = () => {
   const liveData = methods.watch();
 
   const onSubmit = (data: any) => {
-    // Generate a random tracking ID for the new row
     const newTrackingId = `TRK-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    // Map the nested form data to the flat DataGrid format
     dispatch(
       addShipment({
         id: newTrackingId,
@@ -52,7 +50,7 @@ export const ShippingForm: React.FC = () => {
     alert(
       `Label generated for ${newTrackingId}. Data pushed to tracking grid.`,
     );
-    methods.reset(); // Clear the form for the next entry
+    methods.reset(); 
   };
 
   return (

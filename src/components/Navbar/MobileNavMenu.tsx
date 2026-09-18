@@ -7,7 +7,6 @@ import {
   MenuPopover,
   Button,
 } from "@fluentui/react-components";
-// import { Menu as MenuIcon } from "lucide-react";
 import { NavigationFilled } from "@fluentui/react-icons";
 import { useMobileNavStyles } from "./MobileNavMenu.styles";
 
