@@ -7,6 +7,7 @@ import {
 import { Navbar } from "./components/Navbar/Navbar";
 import { useAppSelector } from "./store/hooks";
 import { useAppStyles } from "./App.styles";
+import { ShippingForm } from "./components/feature/ShippingForm/ShippingForm";
 
 const App: React.FC = () => {
   const isDark = useAppSelector((state) => state.theme.isDark);
@@ -18,6 +19,7 @@ const App: React.FC = () => {
         <Navbar />
 
         <main className={styles.mainContent}>
+          <ShippingForm />
           <h1>Architecture Updated</h1>
           <p>
             All components now strictly separate their UI logic from their
