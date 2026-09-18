@@ -1,32 +1,30 @@
-import React from 'react';
-import { FluentProvider, webLightTheme, webDarkTheme, makeStyles } from '@fluentui/react-components';
-import { Navbar } from './components/Navbar';
-import { useAppSelector } from './store/hooks';
-
-
-const useStyles = makeStyles({
-  appContainer: {
-    minHeight: '100vh',
-    fontFamily: 'Segoe UI, sans-serif',
-  },
-  mainContent: {
-    padding: '24px',
-  },
-});
+import React from "react";
+import {
+  FluentProvider,
+  webLightTheme,
+  webDarkTheme,
+} from "@fluentui/react-components";
+import { Navbar } from "./components/Navbar/Navbar";
+import { useAppSelector } from "./store/hooks";
+import { useAppStyles } from "./App.styles";
+import { ShippingForm } from "./components/feature/ShippingForm/ShippingForm";
 
 const App: React.FC = () => {
-  // Consume the theme from Redux
   const isDark = useAppSelector((state) => state.theme.isDark);
-  const styles = useStyles();
+  const styles = useAppStyles();
 
   return (
     <FluentProvider theme={isDark ? webDarkTheme : webLightTheme}>
-      <div className={styles.appContainer} style={{ backgroundColor: isDark ? '#242424' : '#faf9f8' }}>
+      <div className={styles.appContainer}>
         <Navbar />
-        
+
         <main className={styles.mainContent}>
-          <h1>Redux Toolkit Integrated</h1>
-          <p>The theme toggle and user profile are now powered by Redux global state!</p>
+          <ShippingForm />
+          <h1>Architecture Updated</h1>
+          <p>
+            All components now strictly separate their UI logic from their
+            Griffel styles!
+          </p>
         </main>
       </div>
     </FluentProvider>
