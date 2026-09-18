@@ -8,6 +8,7 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { useAppSelector } from "./store/hooks";
 import { useAppStyles } from "./App.styles";
 import { ShippingForm } from "./components/feature/ShippingForm/ShippingForm";
+import { ShipmentTable } from "./components/feature/ShipmentTracking/ShipmentTable";
 
 const App: React.FC = () => {
   const isDark = useAppSelector((state) => state.theme.isDark);
@@ -20,11 +21,7 @@ const App: React.FC = () => {
 
         <main className={styles.mainContent}>
           <ShippingForm />
-          <h1>Architecture Updated</h1>
-          <p>
-            All components now strictly separate their UI logic from their
-            Griffel styles!
-          </p>
+          <ShipmentTable />
         </main>
       </div>
     </FluentProvider>

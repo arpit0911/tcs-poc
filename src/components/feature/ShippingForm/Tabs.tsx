@@ -1,6 +1,7 @@
 import React from "react";
 import { FormInput } from "../../shared/FormInput";
 import { FormSelect } from "../../shared/FormSelect";
+import { FormDate } from "../../shared/FormDate";
 
 const contactValidationRules = {
   minLength: {
@@ -23,41 +24,56 @@ const emailValidationRules = {
     message: "Invalid email address",
   },
 };
-export const SenderDetailsTab: React.FC = () => (
-  <>
-    <FormInput
-      name="sender.fullName"
-      label="Sender Full Name"
-      placeholder="John Doe"
-      required
-    />
-    <FormInput
-      name="sender.email"
-      label="Sender Email"
-      placeholder="john.doe@company.com"
-      type="email"
-      required
-      hint="We will send the tracking receipt here."
-      rules={{
-        ...emailValidationRules,
-      }}
-    />
-    <FormInput
-      name="sender.contact"
-      label="Contact"
-      placeholder="+91 1234567890"
-      required
-      rules={{ ...contactValidationRules }}
-    />
-    <FormInput
-      name="sender.address"
-      label="Address"
-      placeholder="AB/2 - 123, Street Name, City, State, ZIP"
-      appearance="filled-lighter"
-      required
-    />
-  </>
-);
+export const SenderDetailsTab: React.FC = () => {
+  const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+
+  return (
+    <>
+      <FormInput
+        name="sender.fullName"
+        label="Sender Full Name"
+        placeholder="John Doe"
+        required
+      />
+      <FormInput
+        name="sender.email"
+        label="Sender Email"
+        placeholder="john.doe@company.com"
+        type="email"
+        required
+        hint="We will send the tracking receipt here."
+        rules={{
+          ...emailValidationRules,
+        }}
+      />
+      <FormInput
+        name="sender.contact"
+        label="Contact"
+        placeholder="+91 1234567890"
+        required
+        rules={{ ...contactValidationRules }}
+      />
+      <FormInput
+        name="sender.address"
+        label="Address"
+        placeholder="AB/2 - 123, Street Name, City, State, ZIP"
+        appearance="filled-lighter"
+        required
+      />
+      <FormDate
+        name="sender.expectedDelivery"
+        label="Expected Delivery Date"
+        required
+        rules={{
+          min: {
+            value: today,
+            message: "Expected delivery date cannot be in the past",
+          },
+        }}
+      />
+    </>
+  );
+};
 
 export const ReceiverDetailsTab: React.FC = () => (
   <>

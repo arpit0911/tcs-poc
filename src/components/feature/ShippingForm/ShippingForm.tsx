@@ -3,8 +3,11 @@ import { useForm, FormProvider } from "react-hook-form";
 import { TabList, Tab, Button } from "@fluentui/react-components";
 import { SenderDetailsTab, ReceiverDetailsTab, ParcelDetailsTab } from "./Tabs";
 import { useShippingStyles } from "./ShippingForm.styles";
+import { addShipment } from "../../../store/slices/shipmentSlice";
+import { useAppDispatch } from "../../../store/hooks";
 
 export const ShippingForm: React.FC = () => {
+  const dispatch = useAppDispatch();
   const styles = useShippingStyles();
   const [selectedTab, setSelectedTab] = useState<string>("sender");
 
@@ -15,6 +18,7 @@ export const ShippingForm: React.FC = () => {
         email: "",
         contact: "",
         address: "",
+        expectedDelivery: "",
       },
       receiver: {
         fullName: "",
@@ -30,8 +34,25 @@ export const ShippingForm: React.FC = () => {
   const liveData = methods.watch();
 
   const onSubmit = (data: any) => {
-    console.log("Final Print Data ready for API or Redux:", data);
-    alert("Label ready to print! Check console for payload.");
+    // Generate a random tracking ID for the new row
+    const newTrackingId = `TRK-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    // Map the nested form data to the flat DataGrid format
+    dispatch(
+      addShipment({
+        id: newTrackingId,
+        senderName: `${data.sender.firstName} ${data.sender.lastName}`,
+        receiverName: `${data.receiver.firstName} ${data.receiver.lastName}`,
+        status: "Pending",
+        transport: data.parcel.transport,
+        expectedDelivery: data.sender.expectedDelivery,
+      }),
+    );
+
+    alert(
+      `Label generated for ${newTrackingId}. Data pushed to tracking grid.`,
+    );
+    methods.reset(); // Clear the form for the next entry
   };
 
   return (
