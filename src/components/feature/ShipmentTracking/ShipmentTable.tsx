@@ -30,24 +30,50 @@ export const ShipmentTable: React.FC = () => {
         columnId: "id",
         compare: (a, b) => a.id.localeCompare(b.id),
         renderHeaderCell: () => "Tracking ID",
-        renderCell: (item) => item.id,
+        renderCell: (item) => <strong>{item.id}</strong>,
       }),
       createTableColumn<ShipmentRecord>({
         columnId: "sender",
         compare: (a, b) => a.senderName.localeCompare(b.senderName),
         renderHeaderCell: () => "Sender",
-        renderCell: (item) => item.senderName,
+        renderCell: (item) => (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span>{item.senderName}</span>
+            <span style={{ fontSize: "12px", color: "gray" }}>
+              {item.senderContact}
+            </span>
+          </div>
+        ),
       }),
       createTableColumn<ShipmentRecord>({
         columnId: "receiver",
         compare: (a, b) => a.receiverName.localeCompare(b.receiverName),
         renderHeaderCell: () => "Receiver",
-        renderCell: (item) => item.receiverName,
+        renderCell: (item) => (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span>{item.receiverName}</span>
+            <span style={{ fontSize: "12px", color: "gray" }}>
+              {item.receiverContact}
+            </span>
+          </div>
+        ),
       }),
       createTableColumn<ShipmentRecord>({
-        columnId: "deliveryDate",
+        columnId: "parcel",
+        compare: (a, b) => a.parcelType.localeCompare(b.parcelType),
+        renderHeaderCell: () => "Parcel Info",
+        renderCell: (item) => `${item.parcelType} (${item.parcelWeight}kg)`,
+      }),
+      createTableColumn<ShipmentRecord>({
+        columnId: "transport",
+        compare: (a, b) => a.transport.localeCompare(b.transport),
+        renderHeaderCell: () => "Transport",
+        renderCell: (item) => item.transport.toUpperCase(),
+      }),
+      createTableColumn<ShipmentRecord>({
+        columnId: "requestedDate",
         compare: (a, b) => a.requestedDate.localeCompare(b.requestedDate),
-        renderHeaderCell: () => "Expected Delivery",
+        renderHeaderCell: () => "Requested Date",
         renderCell: (item) => item.requestedDate,
       }),
       createTableColumn<ShipmentRecord>({
@@ -60,7 +86,7 @@ export const ShipmentTable: React.FC = () => {
               <Input
                 type="date"
                 value={item.estimatedDate}
-                onChange={(_, data) => {
+                onChange={(e, data) => {
                   if (data.value) {
                     dispatch(
                       updateEstimatedDate({ id: item.id, date: data.value }),
@@ -70,7 +96,7 @@ export const ShipmentTable: React.FC = () => {
               />
             );
           }
-          return <span>{(item.estimatedDate)}</span>;
+          return <span>{item.estimatedDate}</span>;
         },
       }),
       createTableColumn<ShipmentRecord>({
@@ -81,12 +107,9 @@ export const ShipmentTable: React.FC = () => {
           return (
             <Select
               value={item.status}
-              onChange={(_, data) => {
+              onChange={(e, data) => {
                 dispatch(
-                  updateShipmentStatus({
-                    id: item.id,
-                    status: data.value,
-                  }),
+                  updateShipmentStatus({ id: item.id, status: data.value }),
                 );
               }}
             >
@@ -101,11 +124,11 @@ export const ShipmentTable: React.FC = () => {
         },
       }),
     ],
-    [styles, dispatch],
+    [dispatch],
   );
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ overflowX: "auto" }}>
       <h2 style={{ marginBottom: "16px" }}>Tracking Dashboard</h2>
 
       <DataGrid

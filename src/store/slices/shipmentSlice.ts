@@ -2,12 +2,26 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface ShipmentRecord {
   id: string;
+  // Sender
   senderName: string;
+  senderEmail: string;
+  senderContact: string;
+  senderAddress: string;
+  requestedDate: string;
+  // Receiver
   receiverName: string;
-  status: string;
+  receiverEmail: string;
+  receiverContact: string;
+  receiverAddress: string;
+  // Parcel
+  parcelType: string;
+  parcelWeight: string;
+  parcelSize: string;
   transport: string;
-  requestedDate: string; // From the Sender's form
-  estimatedDate: string; // System generated
+  remark: string;
+  // System
+  status: string;
+  estimatedDate: string;
 }
 
 interface ShipmentState {
@@ -17,22 +31,42 @@ interface ShipmentState {
 const initialState: ShipmentState = {
   records: [
     {
-      id: "TRK-1000",
+      id: "TRK-1001",
       senderName: "System Default",
+      senderEmail: "admin@warehouse.com",
+      senderContact: "555-0000",
+      senderAddress: "123 Warehouse St",
+      requestedDate: "2026-09-24",
       receiverName: "Warehouse",
-      status: "Delayed",
+      receiverEmail: "receiving@warehouse.com",
+      receiverContact: "555-0001",
+      receiverAddress: "456 Storage Ave",
+      parcelType: "Box",
+      parcelWeight: "10",
+      parcelSize: "Medium",
       transport: "ground",
-      requestedDate: "2026-09-23",
-      estimatedDate: "2026-09-25",
+      remark: "Initial system record",
+      status: "Delayed",
+      estimatedDate: "2026-09-26",
     },
     {
-      id: "TRK-1020",
+      id: "TRK-1000",
       senderName: "System Default",
+      senderEmail: "admin@warehouse.com",
+      senderContact: "555-0000",
+      senderAddress: "123 Warehouse St",
+      requestedDate: "2026-09-23",
       receiverName: "Warehouse",
-      status: "in-transit",
-      transport: "air",
-      requestedDate: "2026-10-23",
-      estimatedDate: "2026-10-25",
+      receiverEmail: "receiving@warehouse.com",
+      receiverContact: "555-0001",
+      receiverAddress: "456 Storage Ave",
+      parcelType: "Box",
+      parcelWeight: "10",
+      parcelSize: "Medium",
+      transport: "ground",
+      remark: "Initial system record",
+      status: "Delayed",
+      estimatedDate: "2026-09-25",
     },
   ],
 };
@@ -49,18 +83,14 @@ const shipmentSlice = createSlice({
       action: PayloadAction<{ id: string; status: string }>,
     ) => {
       const record = state.records.find((r) => r.id === action.payload.id);
-      if (record) {
-        record.status = action.payload.status;
-      }
+      if (record) record.status = action.payload.status;
     },
     updateEstimatedDate: (
       state,
       action: PayloadAction<{ id: string; date: string }>,
     ) => {
       const record = state.records.find((r) => r.id === action.payload.id);
-      if (record) {
-        record.estimatedDate = action.payload.date;
-      }
+      if (record) record.estimatedDate = action.payload.date;
     },
   },
 });

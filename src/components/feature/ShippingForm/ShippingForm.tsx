@@ -45,18 +45,30 @@ export const ShippingForm: React.FC = () => {
     dispatch(
       addShipment({
         id: newTrackingId,
-        senderName: `${data.sender.fullName}`,
+        // Sender
+        senderName: `${data.sender.fullName} `,
+        senderEmail: data.sender.email,
+        senderContact: data.sender.contact,
+        senderAddress: data.sender.address,
+        requestedDate: data.sender.requestedDate || "N/A",
+        // Receiver
         receiverName: `${data.receiver.fullName}`,
-        status: "Pending",
+        receiverEmail: data.receiver.email,
+        receiverContact: data.receiver.contact,
+        receiverAddress: data.receiver.address,
+        // Parcel
+        parcelType: data.parcel.type || "N/A",
+        parcelWeight: data.parcel.weight || "N/A",
+        parcelSize: data.parcel.size || "N/A",
         transport: data.parcel.transport,
-        requestedDate: data.sender.requestedDate || "N/A", // Sender's request
-        estimatedDate: generateDeliveryDate(data.parcel.transport), // System generation
+        remark: data.parcel.remark || "None",
+        // System
+        status: "Pending",
+        estimatedDate: generateDeliveryDate(data.parcel.transport),
       }),
     );
 
-    alert(
-      `Label generated for ${newTrackingId}. Data pushed to tracking grid.`,
-    );
+    alert("Label generated!");
     methods.reset();
     setSelectedTab("sender");
   };
