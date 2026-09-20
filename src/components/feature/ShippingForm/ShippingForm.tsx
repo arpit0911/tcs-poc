@@ -18,7 +18,7 @@ export const ShippingForm: React.FC = () => {
         email: "",
         contact: "",
         address: "",
-        expectedDelivery: "",
+        requestedDate: "",
       },
       receiver: {
         fullName: "",
@@ -33,6 +33,12 @@ export const ShippingForm: React.FC = () => {
 
   const liveData = methods.watch();
 
+  const generateDeliveryDate = (transportType: string) => {
+    const deliveryDate = new Date();
+    const transitDays = transportType === "air" ? 2 : 5;
+    deliveryDate.setDate(deliveryDate.getDate() + transitDays);
+    return deliveryDate.toISOString().split("T")[0];
+  };
   const onSubmit = (data: any) => {
     const newTrackingId = `TRK-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -43,7 +49,8 @@ export const ShippingForm: React.FC = () => {
         receiverName: `${data.receiver.fullName}`,
         status: "Pending",
         transport: data.parcel.transport,
-        expectedDelivery: data.sender.expectedDelivery,
+        requestedDate: data.sender.requestedDate || "N/A", // Sender's request
+        estimatedDate: generateDeliveryDate(data.parcel.transport), // System generation
       }),
     );
 

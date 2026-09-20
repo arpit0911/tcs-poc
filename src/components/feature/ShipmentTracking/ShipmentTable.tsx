@@ -9,9 +9,11 @@ import {
   createTableColumn,
   type TableColumnDefinition,
   Select,
+  Input,
 } from "@fluentui/react-components";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
+  updateEstimatedDate,
   updateShipmentStatus,
   type ShipmentRecord,
 } from "../../../store/slices/shipmentSlice";
@@ -44,9 +46,32 @@ export const ShipmentTable: React.FC = () => {
       }),
       createTableColumn<ShipmentRecord>({
         columnId: "deliveryDate",
-        compare: (a, b) => a.expectedDelivery.localeCompare(b.expectedDelivery),
+        compare: (a, b) => a.requestedDate.localeCompare(b.requestedDate),
         renderHeaderCell: () => "Expected Delivery",
-        renderCell: (item) => item.expectedDelivery,
+        renderCell: (item) => item.requestedDate,
+      }),
+      createTableColumn<ShipmentRecord>({
+        columnId: "estimatedDate",
+        compare: (a, b) => a.estimatedDate.localeCompare(b.estimatedDate),
+        renderHeaderCell: () => "Est. Delivery",
+        renderCell: (item) => {
+          if (item.status === "Delayed") {
+            return (
+              <Input
+                type="date"
+                value={item.estimatedDate}
+                onChange={(_, data) => {
+                  if (data.value) {
+                    dispatch(
+                      updateEstimatedDate({ id: item.id, date: data.value }),
+                    );
+                  }
+                }}
+              />
+            );
+          }
+          return <span>{(item.estimatedDate)}</span>;
+        },
       }),
       createTableColumn<ShipmentRecord>({
         columnId: "status",
@@ -67,6 +92,7 @@ export const ShipmentTable: React.FC = () => {
             >
               <option value="Pending">Pending</option>
               <option value="In Transit">In Transit</option>
+              <option value="Delayed">Delayed</option>
               <option value="Out for Delivery">Out for Delivery</option>
               <option value="Delivered">Delivered</option>
               <option value="Cancelled">Cancelled</option>
