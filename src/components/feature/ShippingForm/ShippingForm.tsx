@@ -50,37 +50,66 @@ export const ShippingForm: React.FC = () => {
     alert(
       `Label generated for ${newTrackingId}. Data pushed to tracking grid.`,
     );
-    methods.reset(); 
+    methods.reset();
+    setSelectedTab("sender");
+  };
+
+  const onInvalid = (errors: any) => {
+    console.log("Validation errors:", errors);
+    if (errors.sender) {
+      setSelectedTab("sender");
+    } else if (errors.receiver) {
+      setSelectedTab("receiver");
+    } else if (errors.parcel) {
+      setSelectedTab("parcel");
+    }
   };
 
   return (
     <div className={styles.container}>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <TabList
-            selectedValue={selectedTab}
-            onTabSelect={(_, data) => setSelectedTab(data.value as string)}
-          >
-            <Tab value="sender">Sender Details</Tab>
-            <Tab value="receiver">Receiver Details</Tab>
-            <Tab value="parcel">Parcel Details</Tab>
-          </TabList>
-
-          <div className={styles.tabContent}>
-            {selectedTab === "sender" && <SenderDetailsTab />}
-            {selectedTab === "receiver" && <ReceiverDetailsTab />}
-            {selectedTab === "parcel" && <ParcelDetailsTab />}
-
-            <Button
-              appearance="primary"
-              type="submit"
-              className={styles.primaryButton}
+      <div className={styles.formSection}>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit, onInvalid)} noValidate>
+            <TabList
+              selectedValue={selectedTab}
+              onTabSelect={(_, data) => setSelectedTab(data.value as string)}
             >
-              Print Label
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
+              <Tab value="sender">Sender Details</Tab>
+              <Tab value="receiver">Receiver Details</Tab>
+              <Tab value="parcel">Parcel Details</Tab>
+            </TabList>
+
+            <div className={styles.tabContent}>
+              <div
+                style={{ display: selectedTab === "sender" ? "block" : "none" }}
+              >
+                <SenderDetailsTab />
+              </div>
+
+              <div
+                style={{
+                  display: selectedTab === "receiver" ? "block" : "none",
+                }}
+              >
+                <ReceiverDetailsTab />
+              </div>
+
+              <div
+                style={{ display: selectedTab === "parcel" ? "block" : "none" }}
+              >
+                <ParcelDetailsTab />
+              </div>
+              <Button
+                appearance="primary"
+                type="submit"
+                className={styles.primaryButton}
+              >
+                Print Label
+              </Button>
+            </div>
+          </form>
+        </FormProvider>
+      </div>
 
       <div className={styles.previewCard}>
         <h2>Shipping Label Preview</h2>

@@ -2,11 +2,17 @@ import { makeStyles, tokens } from "@fluentui/react-components";
 
 export const useShippingStyles = makeStyles({
   container: {
+    display: "grid",
+    gridTemplateColumns: "3fr 2fr",
+    gap: tokens.spacingHorizontalXXL,
+    maxWidth: "1200px",
+    alignItems: "start",
+  },
+  formSection: {
     display: "flex",
     flexDirection: "column",
-    gap: tokens.spacingVerticalL,
-    maxWidth: "800px",
-    margin: "0 auto",
+    boxShadow: tokens.shadow4,
+    width: "100%",
   },
   tabContent: {
     display: "flex",
@@ -14,16 +20,14 @@ export const useShippingStyles = makeStyles({
     gap: tokens.spacingVerticalM,
     padding: tokens.spacingVerticalL,
     backgroundColor: tokens.colorNeutralBackground1,
-    border: `1px solid ${tokens.colorNeutralStroke1}`,
     borderRadius: `0 0 ${tokens.borderRadiusMedium} ${tokens.borderRadiusMedium}`,
-    borderTop: "none",
+    marginTop: tokens.spacingVerticalM,
   },
   previewCard: {
     padding: tokens.spacingVerticalXL,
     backgroundColor: tokens.colorNeutralBackground2,
     border: `2px dashed ${tokens.colorNeutralStroke2}`,
     borderRadius: tokens.borderRadiusLarge,
-    marginTop: tokens.spacingVerticalXXL,
   },
   previewGrid: {
     display: "grid",
@@ -40,5 +44,5 @@ export const useShippingStyles = makeStyles({
   },
   primaryButton: {
     marginTop: tokens.spacingVerticalM,
-  }
+  },
 });
