@@ -6,7 +6,8 @@ export interface ShipmentRecord {
   receiverName: string;
   status: string;
   transport: string;
-  expectedDelivery: string;
+  requestedDate: string; // From the Sender's form
+  estimatedDate: string; // System generated
 }
 
 interface ShipmentState {
@@ -19,9 +20,10 @@ const initialState: ShipmentState = {
       id: "TRK-1000",
       senderName: "System Default",
       receiverName: "Warehouse",
-      status: "Pending",
+      status: "Delayed",
       transport: "ground",
-      expectedDelivery: "2026-10-01",
+      requestedDate: "2026-09-23",
+      estimatedDate: "2026-09-25",
     },
     {
       id: "TRK-1020",
@@ -29,7 +31,8 @@ const initialState: ShipmentState = {
       receiverName: "Warehouse",
       status: "in-transit",
       transport: "air",
-      expectedDelivery: "2026-10-01",
+      requestedDate: "2026-10-23",
+      estimatedDate: "2026-10-25",
     },
   ],
 };
@@ -50,8 +53,18 @@ const shipmentSlice = createSlice({
         record.status = action.payload.status;
       }
     },
+    updateEstimatedDate: (
+      state,
+      action: PayloadAction<{ id: string; date: string }>,
+    ) => {
+      const record = state.records.find((r) => r.id === action.payload.id);
+      if (record) {
+        record.estimatedDate = action.payload.date;
+      }
+    },
   },
 });
 
-export const { addShipment, updateShipmentStatus } = shipmentSlice.actions;
+export const { addShipment, updateShipmentStatus, updateEstimatedDate } =
+  shipmentSlice.actions;
 export default shipmentSlice.reducer;
