@@ -39,8 +39,8 @@ export const ShippingForm: React.FC = () => {
     dispatch(
       addShipment({
         id: newTrackingId,
-        senderName: `${data.sender.firstName} ${data.sender.lastName}`,
-        receiverName: `${data.receiver.firstName} ${data.receiver.lastName}`,
+        senderName: `${data.sender.fullName}`,
+        receiverName: `${data.receiver.fullName}`,
         status: "Pending",
         transport: data.parcel.transport,
         expectedDelivery: data.sender.expectedDelivery,
