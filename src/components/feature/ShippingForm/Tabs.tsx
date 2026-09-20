@@ -57,13 +57,12 @@ export const SenderDetailsTab: React.FC = () => {
         name="sender.address"
         label="Address"
         placeholder="AB/2 - 123, Street Name, City, State, ZIP"
-        appearance="filled-lighter"
         required
       />
       <FormDate
         name="sender.expectedDelivery"
         label="Expected Delivery Date"
-        required
+        placeholder="DD/MM/YYYY"
         rules={{
           min: {
             value: today,
