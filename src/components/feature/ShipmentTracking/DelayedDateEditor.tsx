@@ -6,6 +6,7 @@ import {
   type ShipmentRecord,
 } from "../../../store/slices/shipmentSlice";
 import React from "react";
+import { showToast } from "../../../store/slices/toastSlice";
 
 // Helper to get local date string YYYY-MM-DD
 const getLocalToday = () => {
@@ -42,7 +43,13 @@ export const DelayedDateEditor: React.FC<{ item: ShipmentRecord }> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (tempDateStr < minDateStr) {
-        alert("Rescheduled date cannot be in the past.");
+        dispatch(
+          showToast({
+            title: "Reschedule Failed",
+            message: "Rescheduled date cannot be in the past.",
+            intent: "warning",
+          }),
+        );
         return;
       }
       dispatch(updateEstimatedDate({ id: item.id, date: tempDateStr }));

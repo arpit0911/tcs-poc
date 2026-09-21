@@ -9,6 +9,7 @@ import { useAppSelector } from "./store/hooks";
 import { useAppStyles } from "./App.styles";
 import { ShippingForm } from "./components/feature/ShippingForm/ShippingForm";
 import { ShipmentTable } from "./components/feature/ShipmentTracking/ShipmentTable";
+import { GlobalToaster } from "./components/shared/GlobalToaster";
 
 const App: React.FC = () => {
   const isDark = useAppSelector((state) => state.theme.isDark);
@@ -16,6 +17,7 @@ const App: React.FC = () => {
 
   return (
     <FluentProvider theme={isDark ? webDarkTheme : webLightTheme}>
+      <GlobalToaster />
       <div className={styles.appContainer}>
         <Navbar />
 

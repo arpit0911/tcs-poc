@@ -9,6 +9,7 @@ import {
   updateShipment,
 } from "../../../store/slices/shipmentSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { showToast } from "../../../store/slices/toastSlice";
 
 export const ShippingForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -120,7 +121,13 @@ export const ShippingForm: React.FC = () => {
         }),
       );
       dispatch(setEditingId(null));
-      alert("Shipment Updated Successfully!");
+      dispatch(
+        showToast({
+          title: "Label Updated",
+          message: "Shipment updated successfully!",
+          intent: "success",
+        }),
+      );
     } else {
       // CREATE NEW RECORD
       dispatch(
@@ -131,7 +138,13 @@ export const ShippingForm: React.FC = () => {
           estimatedDate: generateDeliveryDate(data.parcel.transport),
         }),
       );
-      alert("New Label Generated!");
+      dispatch(
+        showToast({
+          title: "Label Generated",
+          message: `Estimated Delivery: ${generateDeliveryDate(data.parcel.transport)}`,
+          intent: "success",
+        }),
+      );
     }
 
     methods.reset(defaultFormValues);
