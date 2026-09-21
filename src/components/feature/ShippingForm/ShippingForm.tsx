@@ -178,21 +178,31 @@ export const ShippingForm: React.FC = () => {
 
             <div className={styles.tabContent}>
               <div
-                style={{ display: selectedTab === "sender" ? "block" : "none" }}
+                className={
+                  selectedTab === "sender"
+                    ? styles.tabPanel
+                    : styles.hiddenTabContent
+                }
               >
                 <SenderDetailsTab />
               </div>
 
               <div
-                style={{
-                  display: selectedTab === "receiver" ? "block" : "none",
-                }}
+                className={
+                  selectedTab === "receiver"
+                    ? styles.tabPanel
+                    : styles.hiddenTabContent
+                }
               >
                 <ReceiverDetailsTab />
               </div>
 
               <div
-                style={{ display: selectedTab === "parcel" ? "block" : "none" }}
+                className={
+                  selectedTab === "parcel"
+                    ? styles.tabPanel
+                    : styles.hiddenTabContent
+                }
               >
                 <ParcelDetailsTab />
               </div>

@@ -14,6 +14,9 @@ export const useShippingStyles = makeStyles({
     boxShadow: tokens.shadow4,
     width: "100%",
   },
+  hiddenTabContent: {
+    display: "none",
+  },
   tabContent: {
     display: "flex",
     flexDirection: "column",
@@ -22,6 +25,11 @@ export const useShippingStyles = makeStyles({
     backgroundColor: tokens.colorNeutralBackground1,
     borderRadius: `0 0 ${tokens.borderRadiusMedium} ${tokens.borderRadiusMedium}`,
     marginTop: tokens.spacingVerticalM,
+  },
+  tabPanel: {
+    display: "flex",
+    flexDirection: "column",
+    gap: tokens.spacingVerticalL, // Creates generous spacing between input fields
   },
   previewCard: {
     padding: tokens.spacingVerticalXL,

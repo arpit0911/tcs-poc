@@ -38,6 +38,23 @@ export const FormInput: React.FC<FormInputProps> = ({
     rules: {
       required: required ? `${label} is required` : false,
       ...rules,
+      validate: {
+        // Automatically block strings that consist purely of spaces
+        noEmptySpaces: (value) => {
+          if (
+            typeof value === "string" &&
+            value.length > 0 &&
+            value.trim().length === 0
+          ) {
+            return `${label} cannot be empty spaces`;
+          }
+          return true;
+        },
+        // Preserve any custom validation functions passed in via the 'rules' prop
+        ...(typeof rules?.validate === "function"
+          ? { custom: rules.validate }
+          : rules?.validate),
+      },
     },
   });
 

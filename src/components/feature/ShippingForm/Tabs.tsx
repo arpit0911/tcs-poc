@@ -106,7 +106,6 @@ export const ReceiverDetailsTab: React.FC = () => (
       name="receiver.address"
       label="Address"
       placeholder="AB/2 - 123, Street Name, City, State, ZIP"
-      appearance="filled-lighter"
       required
     />
   </>
@@ -127,15 +126,31 @@ export const ParcelDetailsTab: React.FC = () => (
     <FormInput
       name="parcel.weight"
       label="Estimated Weight (kg)"
-      placeholder="2.0"
+      placeholder="e.g., 2.5"
       type="number"
       required
+      rules={{
+        pattern: {
+          value: /^(0*[1-9]\d*(\.\d+)?|0+\.\d*[1-9]\d*)$/,
+          message: "Weight must be a positive number greater than 0",
+        },
+        max: {
+          value: 2000,
+          message: "Weight cannot exceed 2000 kg",
+        },
+      }}
     />
     <FormInput
       name="parcel.size"
-      label="Size (L x W x H)"
+      label="Dimensions (L x W x H in cm)"
       type="text"
-      placeholder="2 x 3 x 4"
+      placeholder="e.g., 10x15x20"
+      rules={{
+        pattern: {
+          value: /^\d+(\.\d+)?\s*[xX]\s*\d+(\.\d+)?\s*[xX]\s*\d+(\.\d+)?$/,
+          message: "Format must be L x W x H (e.g., 10x15x20)",
+        },
+      }}
     />
     <FormSelect
       name="parcel.transport"
