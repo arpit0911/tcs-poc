@@ -19,6 +19,7 @@ import {
   type ShipmentRecord,
 } from "../../../store/slices/shipmentSlice";
 import { useTableStyles } from "./ShipmentTable.styles";
+import { DelayedDateEditor } from "./DelayedDateEditor";
 
 export const ShipmentTable: React.FC = () => {
   const styles = useTableStyles();
@@ -84,19 +85,20 @@ export const ShipmentTable: React.FC = () => {
         renderHeaderCell: () => "Est. Delivery",
         renderCell: (item) => {
           if (item.status === "Delayed") {
-            return (
-              <Input
-                type="date"
-                value={item.estimatedDate}
-                onChange={(_, data) => {
-                  if (data.value) {
-                    dispatch(
-                      updateEstimatedDate({ id: item.id, date: data.value }),
-                    );
-                  }
-                }}
-              />
-            );
+            return <DelayedDateEditor item={item} />;
+            // return (
+            //   <Input
+            //     type="date"
+            //     value={item.estimatedDate}
+            //     onChange={(_, data) => {
+            //       if (data.value) {
+            //         dispatch(
+            //           updateEstimatedDate({ id: item.id, date: data.value }),
+            //         );
+            //       }
+            //     }}
+            //   />
+            // );
           }
           return <span>{item.estimatedDate}</span>;
         },
@@ -121,6 +123,7 @@ export const ShipmentTable: React.FC = () => {
               <option value="Out for Delivery">Out for Delivery</option>
               <option value="Delivered">Delivered</option>
               <option value="Cancelled">Cancelled</option>
+              <option value="Rescheduled">Rescheduled</option>
             </Select>
           );
         },
