@@ -1,37 +1,87 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { TabList, Tab, Button } from "@fluentui/react-components";
 import { SenderDetailsTab, ReceiverDetailsTab, ParcelDetailsTab } from "./Tabs";
 import { useShippingStyles } from "./ShippingForm.styles";
-import { addShipment } from "../../../store/slices/shipmentSlice";
-import { useAppDispatch } from "../../../store/hooks";
+import {
+  addShipment,
+  setEditingId,
+  updateShipment,
+} from "../../../store/slices/shipmentSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 
 export const ShippingForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const styles = useShippingStyles();
+
+  const records = useAppSelector((state) => state.shipments.records);
+  const editingId = useAppSelector((state) => state.shipments.editingId);
+
   const [selectedTab, setSelectedTab] = useState<string>("sender");
 
-  const methods = useForm({
-    defaultValues: {
-      sender: {
-        fullName: "",
-        email: "",
-        contact: "",
-        address: "",
-        requestedDate: "",
-      },
-      receiver: {
-        fullName: "",
-        email: "",
-        contact: "",
-        address: "",
-      },
-      parcel: { type: "", weight: "", size: "", transport: "", remark: "" },
+  const defaultFormValues = {
+    sender: {
+      fullName: "",
+      email: "",
+      contact: "",
+      address: "",
+      requestedDate: "",
     },
+    receiver: {
+      fullName: "",
+      email: "",
+      contact: "",
+      address: "",
+    },
+    parcel: { type: "", weight: "", size: "", transport: "", remark: "" },
+  };
+
+  const methods = useForm({
+    defaultValues: defaultFormValues,
     mode: "onTouched",
   });
 
   const liveData = methods.watch();
+
+  useEffect(() => {
+    if (editingId) {
+      const recordToEdit = records.find((r) => r.id === editingId);
+      if (recordToEdit) {
+        methods.reset({
+          sender: {
+            fullName: recordToEdit.senderName,
+            email: recordToEdit.senderEmail,
+            contact: recordToEdit.senderContact,
+            address: recordToEdit.senderAddress,
+            requestedDate:
+              recordToEdit.requestedDate !== "N/A"
+                ? recordToEdit.requestedDate
+                : "",
+          },
+          receiver: {
+            fullName: recordToEdit.receiverName,
+            email: recordToEdit.receiverEmail,
+            contact: recordToEdit.receiverContact,
+            address: recordToEdit.receiverAddress,
+          },
+          parcel: {
+            type:
+              recordToEdit.parcelType === "N/A" ? "" : recordToEdit.parcelType,
+            weight:
+              recordToEdit.parcelWeight === "N/A"
+                ? ""
+                : recordToEdit.parcelWeight,
+            size:
+              recordToEdit.parcelSize === "N/A" ? "" : recordToEdit.parcelSize,
+            transport: recordToEdit.transport,
+            remark: recordToEdit.remark === "None" ? "" : recordToEdit.remark,
+          },
+        });
+      }
+    } else {
+      methods.reset(defaultFormValues);
+    }
+  }, [editingId, records, methods]);
 
   const generateDeliveryDate = (transportType: string) => {
     const deliveryDate = new Date();
@@ -40,36 +90,51 @@ export const ShippingForm: React.FC = () => {
     return deliveryDate.toISOString().split("T")[0];
   };
   const onSubmit = (data: any) => {
-    const newTrackingId = `TRK-${Math.floor(1000 + Math.random() * 9000)}`;
+    const mappedData = {
+      // Sender
+      senderName: `${data.sender.fullName} `,
+      senderEmail: data.sender.email,
+      senderContact: data.sender.contact,
+      senderAddress: data.sender.address,
+      requestedDate: data.sender.requestedDate || "N/A",
+      // Receiver
+      receiverName: `${data.receiver.fullName}`,
+      receiverEmail: data.receiver.email,
+      receiverContact: data.receiver.contact,
+      receiverAddress: data.receiver.address,
+      // Parcel
+      parcelType: data.parcel.type || "N/A",
+      parcelWeight: data.parcel.weight || "N/A",
+      parcelSize: data.parcel.size || "N/A",
+      transport: data.parcel.transport,
+      remark: data.parcel.remark || "None",
+    };
 
-    dispatch(
-      addShipment({
-        id: newTrackingId,
-        // Sender
-        senderName: `${data.sender.fullName} `,
-        senderEmail: data.sender.email,
-        senderContact: data.sender.contact,
-        senderAddress: data.sender.address,
-        requestedDate: data.sender.requestedDate || "N/A",
-        // Receiver
-        receiverName: `${data.receiver.fullName}`,
-        receiverEmail: data.receiver.email,
-        receiverContact: data.receiver.contact,
-        receiverAddress: data.receiver.address,
-        // Parcel
-        parcelType: data.parcel.type || "N/A",
-        parcelWeight: data.parcel.weight || "N/A",
-        parcelSize: data.parcel.size || "N/A",
-        transport: data.parcel.transport,
-        remark: data.parcel.remark || "None",
-        // System
-        status: "Pending",
-        estimatedDate: generateDeliveryDate(data.parcel.transport),
-      }),
-    );
+    if (editingId) {
+      // UPDATE EXISTING RECORD
+      const existingRecord = records.find((r) => r.id === editingId);
+      dispatch(
+        updateShipment({
+          ...existingRecord!,
+          ...mappedData,
+        }),
+      );
+      dispatch(setEditingId(null));
+      alert("Shipment Updated Successfully!");
+    } else {
+      // CREATE NEW RECORD
+      dispatch(
+        addShipment({
+          ...mappedData,
+          id: `TRK-${Math.floor(1000 + Math.random() * 9000)}`,
+          status: "Pending",
+          estimatedDate: generateDeliveryDate(data.parcel.transport),
+        }),
+      );
+      alert("New Label Generated!");
+    }
 
-    alert("Label generated!");
-    methods.reset();
+    methods.reset(defaultFormValues);
     setSelectedTab("sender");
   };
 
@@ -118,13 +183,23 @@ export const ShippingForm: React.FC = () => {
               >
                 <ParcelDetailsTab />
               </div>
-              <Button
-                appearance="primary"
-                type="submit"
-                className={styles.primaryButton}
-              >
-                Print Label
-              </Button>
+              <div className={styles.actionContainer}>
+                <Button appearance="primary" type="submit">
+                  {editingId ? "Update Shipment" : "Print Label"}
+                </Button>
+
+                {editingId && (
+                  <Button
+                    appearance="outline"
+                    onClick={() => {
+                      dispatch(setEditingId(null));
+                      methods.reset(defaultFormValues);
+                    }}
+                  >
+                    Cancel Edit
+                  </Button>
+                )}
+              </div>
             </div>
           </form>
         </FormProvider>

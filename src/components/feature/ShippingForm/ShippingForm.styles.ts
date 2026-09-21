@@ -42,6 +42,11 @@ export const useShippingStyles = makeStyles({
     paddingBottom: tokens.spacingVerticalS,
     marginBottom: tokens.spacingVerticalS,
   },
+  actionContainer: {
+    display: "flex",
+    gap: tokens.spacingHorizontalM,
+    marginTop: tokens.spacingVerticalM,
+  },
   primaryButton: {
     marginTop: tokens.spacingVerticalM,
   },

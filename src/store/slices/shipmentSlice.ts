@@ -26,6 +26,7 @@ export interface ShipmentRecord {
 
 interface ShipmentState {
   records: ShipmentRecord[];
+  editingId: string | null;
 }
 
 const initialState: ShipmentState = {
@@ -69,6 +70,7 @@ const initialState: ShipmentState = {
       estimatedDate: "2026-09-25",
     },
   ],
+  editingId: null,
 };
 
 const shipmentSlice = createSlice({
@@ -92,9 +94,23 @@ const shipmentSlice = createSlice({
       const record = state.records.find((r) => r.id === action.payload.id);
       if (record) record.estimatedDate = action.payload.date;
     },
+    setEditingId: (state, action: PayloadAction<string | null>) => {
+      state.editingId = action.payload;
+    },
+    updateShipment: (state, action: PayloadAction<ShipmentRecord>) => {
+      const index = state.records.findIndex((r) => r.id === action.payload.id);
+      if (index !== -1) {
+        state.records[index] = action.payload;
+      }
+    },
   },
 });
 
-export const { addShipment, updateShipmentStatus, updateEstimatedDate } =
-  shipmentSlice.actions;
+export const {
+  addShipment,
+  updateShipmentStatus,
+  updateEstimatedDate,
+  setEditingId,
+  updateShipment,
+} = shipmentSlice.actions;
 export default shipmentSlice.reducer;
