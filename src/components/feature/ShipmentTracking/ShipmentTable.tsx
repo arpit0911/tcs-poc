@@ -13,6 +13,7 @@ import {
 } from "@fluentui/react-components";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
+  setEditingId,
   updateEstimatedDate,
   updateShipmentStatus,
   type ShipmentRecord,
@@ -23,6 +24,7 @@ export const ShipmentTable: React.FC = () => {
   const styles = useTableStyles();
   const dispatch = useAppDispatch();
   const items = useAppSelector((state) => state.shipments.records);
+  const editingId = useAppSelector((state) => state.shipments.editingId);
 
   const columns = useMemo<TableColumnDefinition<ShipmentRecord>[]>(
     () => [
@@ -86,7 +88,7 @@ export const ShipmentTable: React.FC = () => {
               <Input
                 type="date"
                 value={item.estimatedDate}
-                onChange={(e, data) => {
+                onChange={(_, data) => {
                   if (data.value) {
                     dispatch(
                       updateEstimatedDate({ id: item.id, date: data.value }),
@@ -107,7 +109,7 @@ export const ShipmentTable: React.FC = () => {
           return (
             <Select
               value={item.status}
-              onChange={(e, data) => {
+              onChange={(_, data) => {
                 dispatch(
                   updateShipmentStatus({ id: item.id, status: data.value }),
                 );
@@ -135,8 +137,17 @@ export const ShipmentTable: React.FC = () => {
         items={items}
         columns={columns}
         sortable
-        selectionMode="multiselect"
+        selectionMode="single"
         getRowId={(item) => item.id}
+        selectedItems={editingId ? [editingId] : []}
+        onSelectionChange={(_, data) => {
+          const selectedArray = Array.from(data.selectedItems);
+          if (selectedArray.length > 0) {
+            dispatch(setEditingId(selectedArray[0] as string));
+          } else {
+            dispatch(setEditingId(null));
+          }
+        }}
       >
         <DataGridHeader>
           <DataGridRow>
