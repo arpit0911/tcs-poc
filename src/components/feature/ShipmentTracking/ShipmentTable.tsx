@@ -9,12 +9,10 @@ import {
   createTableColumn,
   type TableColumnDefinition,
   Select,
-  Input,
 } from "@fluentui/react-components";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   setEditingId,
-  updateEstimatedDate,
   updateShipmentStatus,
   type ShipmentRecord,
 } from "../../../store/slices/shipmentSlice";
@@ -86,19 +84,6 @@ export const ShipmentTable: React.FC = () => {
         renderCell: (item) => {
           if (item.status === "Delayed") {
             return <DelayedDateEditor item={item} />;
-            // return (
-            //   <Input
-            //     type="date"
-            //     value={item.estimatedDate}
-            //     onChange={(_, data) => {
-            //       if (data.value) {
-            //         dispatch(
-            //           updateEstimatedDate({ id: item.id, date: data.value }),
-            //         );
-            //       }
-            //     }}
-            //   />
-            // );
           }
           return <span>{item.estimatedDate}</span>;
         },

@@ -29,7 +29,13 @@ export const DelayedDateEditor: React.FC<{ item: ShipmentRecord }> = ({
   const dispatch = useAppDispatch();
   const [tempDateStr, setTempDateStr] = React.useState(item.estimatedDate);
 
-  const minDateStr = getLocalToday();
+  const todayStr = getLocalToday();
+
+  // LOGIC FIX: The minimum date is the original estimated date,
+  // UNLESS that date is already in the past, in which case it is today.
+  const minDateStr =
+    item.estimatedDate > todayStr ? item.estimatedDate : todayStr;
+
   const minDateObj = parseLocalDate(minDateStr);
   const pickerValue = tempDateStr ? parseLocalDate(tempDateStr) : undefined;
 
