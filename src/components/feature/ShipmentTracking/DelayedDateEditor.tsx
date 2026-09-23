@@ -36,25 +36,8 @@ export const DelayedDateEditor: React.FC<{ item: ShipmentRecord }> = ({
   const minDateObj = parseLocalDate(minDateStr);
   const pickerValue = tempDateStr ? parseLocalDate(tempDateStr) : undefined;
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (tempDateStr < minDateStr) {
-        dispatch(
-          showToast({
-            title: "Reschedule Failed",
-            message: "Rescheduled date cannot be in the past.",
-            intent: "warning",
-          }),
-        );
-        return;
-      }
-      dispatch(updateEstimatedDate({ id: item.id, date: tempDateStr }));
-      dispatch(updateShipmentStatus({ id: item.id, status: "Rescheduled" }));
-    }
-  };
-
   return (
-    <div onKeyDown={handleKeyDown} title="Press Enter to save">
+    <div>
       <DatePicker
         value={pickerValue}
         minDate={minDateObj}
@@ -68,8 +51,9 @@ export const DelayedDateEditor: React.FC<{ item: ShipmentRecord }> = ({
             const yyyy = date.getFullYear();
             const mm = String(date.getMonth() + 1).padStart(2, "0");
             const dd = String(date.getDate()).padStart(2, "0");
-            setTempDateStr(`${yyyy}-${mm}-${dd}`);
-            dispatch(updateEstimatedDate({ id: item.id, date: tempDateStr }));
+            const newDateString = `${yyyy}-${mm}-${dd}`;
+            setTempDateStr(newDateString);
+            dispatch(updateEstimatedDate({ id: item.id, date: newDateString }));
             dispatch(
               updateShipmentStatus({ id: item.id, status: "Rescheduled" }),
             );
