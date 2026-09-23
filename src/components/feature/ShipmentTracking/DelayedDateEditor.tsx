@@ -8,13 +8,11 @@ import {
 import React from "react";
 import { showToast } from "../../../store/slices/toastSlice";
 
-// Helper to get local date string YYYY-MM-DD
 const getLocalToday = () => {
   const today = new Date();
   return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 };
 
-// Helper to parse YYYY-MM-DD to Date object
 const parseLocalDate = (dateStr: string) => {
   const parts = dateStr.split("-");
   return new Date(
@@ -32,8 +30,6 @@ export const DelayedDateEditor: React.FC<{ item: ShipmentRecord }> = ({
 
   const todayStr = getLocalToday();
 
-  // LOGIC FIX: The minimum date is the original estimated date,
-  // UNLESS that date is already in the past, in which case it is today.
   const minDateStr =
     item.estimatedDate > todayStr ? item.estimatedDate : todayStr;
 
@@ -63,10 +59,9 @@ export const DelayedDateEditor: React.FC<{ item: ShipmentRecord }> = ({
         value={pickerValue}
         minDate={minDateObj}
         placeholder="Select new date..."
-        // Format display to DD/MM/YYYY for consistency
         formatDate={(date) => {
           if (!date) return "";
-          return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
+          return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
         }}
         onSelectDate={(date) => {
           if (date) {

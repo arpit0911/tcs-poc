@@ -32,7 +32,6 @@ export const FormDate: React.FC<FormDateProps> = ({
     },
   });
 
-  // 1. Parses background Redux data (YYYY-MM-DD) into a Date Object
   const parseLocalDate = (dateStr?: string): Date | undefined => {
     if (!dateStr) return undefined;
     const parts = dateStr.split("-");
@@ -53,34 +52,12 @@ export const FormDate: React.FC<FormDateProps> = ({
   const minDateObj = parseLocalDate(minDateString);
   const pickerValue = field.value ? parseLocalDate(field.value) : undefined;
 
-  // 2. Formats Date Object to Display as DD/MM/YYYY
   const onFormatDate = (date?: Date): string => {
     if (!date) return "";
     const dd = String(date.getDate()).padStart(2, "0");
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     const yyyy = date.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
-  };
-
-  // 3. Parses manual keyboard input (DD/MM/YYYY) into a Date Object
-  const onParseDateFromString = (value: string): Date | null => {
-    const parts = value.split("/");
-    if (parts.length === 3) {
-      const dd = parseInt(parts[0], 10);
-      const mm = parseInt(parts[1], 10) - 1; // Months are 0-indexed
-      const yyyy = parseInt(parts[2], 10);
-
-      const parsedDate = new Date(yyyy, mm, dd);
-      // Validate it's a real date (e.g., prevents 31/02/2026)
-      if (
-        parsedDate.getFullYear() === yyyy &&
-        parsedDate.getMonth() === mm &&
-        parsedDate.getDate() === dd
-      ) {
-        return parsedDate;
-      }
-    }
-    return null; // Return null if user types invalid format
+    return `${yyyy}-${mm}-${dd}`;
   };
 
   return (
@@ -97,13 +74,10 @@ export const FormDate: React.FC<FormDateProps> = ({
         onBlur={field.onBlur}
         value={pickerValue}
         minDate={minDateObj}
-        // Pass the formatting and parsing functions
         formatDate={onFormatDate}
-        parseDateFromString={onParseDateFromString}
         placeholder={placeholder}
         onSelectDate={(date) => {
           if (date) {
-            // Keep the background data standardized to YYYY-MM-DD
             const yyyy = date.getFullYear();
             const mm = String(date.getMonth() + 1).padStart(2, "0");
             const dd = String(date.getDate()).padStart(2, "0");
