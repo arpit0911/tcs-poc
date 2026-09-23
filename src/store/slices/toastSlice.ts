@@ -18,11 +18,9 @@ const toastSlice = createSlice({
   name: "toast",
   initialState,
   reducers: {
-    // Adds a new toast to the global queue
     showToast: (state, action: PayloadAction<ToastPayload>) => {
       state.queue.push(action.payload);
     },
-    // Removes the oldest toast from the queue after it is displayed
     shiftToast: (state) => {
       state.queue.shift();
     },

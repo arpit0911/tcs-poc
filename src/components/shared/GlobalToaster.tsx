@@ -18,7 +18,6 @@ export const GlobalToaster: React.FC = () => {
   const toasts = useAppSelector((state) => state.toast.queue);
 
   useEffect(() => {
-    // If there is a toast in the queue, display it
     if (toasts.length > 0) {
       const currentToast = toasts[0];
 
@@ -32,11 +31,9 @@ export const GlobalToaster: React.FC = () => {
         { intent: currentToast.intent || "info" },
       );
 
-      // Instantly remove it from Redux so it doesn't fire again
       dispatch(shiftToast());
     }
   }, [toasts, dispatchToast, dispatch]);
 
-  // Renders the hidden mounting point for Fluent UI's toast popups
   return <Toaster toasterId={toasterId} position="top-end" />;
 };
