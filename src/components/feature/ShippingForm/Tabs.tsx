@@ -62,7 +62,7 @@ export const SenderDetailsTab: React.FC = () => {
       <FormDate
         name="sender.requestedDate"
         label="Expected Delivery Date"
-        placeholder="DD/MM/YYYY"
+        placeholder="YYYY/MM/DD"
         rules={{
           min: {
             value: today,
