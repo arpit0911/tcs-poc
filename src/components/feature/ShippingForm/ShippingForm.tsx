@@ -112,12 +112,17 @@ export const ShippingForm: React.FC = () => {
     };
 
     if (editingId) {
-      // UPDATE EXISTING RECORD
       const existingRecord = records.find((r) => r.id === editingId);
+      const isDateModified =
+        existingRecord?.requestedDate !== mappedData.requestedDate;
       dispatch(
         updateShipment({
           ...existingRecord!,
           ...mappedData,
+          status: isDateModified ? "Rescheduled" : existingRecord!.status,
+          estimatedDate: isDateModified
+            ? generateDeliveryDate(data.parcel.transport)
+            : existingRecord!.estimatedDate,
         }),
       );
       dispatch(setEditingId(null));
@@ -129,7 +134,6 @@ export const ShippingForm: React.FC = () => {
         }),
       );
     } else {
-      // CREATE NEW RECORD
       dispatch(
         addShipment({
           ...mappedData,
